@@ -1,0 +1,40 @@
+'WIRING          = SENSOR -> KHAKI CABLE -> GREY CABLE -> Logger
+'5V input        = green  -> green       -> red        -> 5V and SE6
+'0.5-4.5V output = red    -> white       -> white      -> SE1-5
+'power ground    = yellow -> brown       -> black      -> G
+
+'variable to store battery volts
+Public batt_V
+'variable to store sensor input millivolts
+Public denIn_mV
+'variable to store sensor #5 output millivolts
+Public denOut5_mV
+'variable to store sensor #5 voltage ratio
+Public denRat5
+
+'storage in table named "phytech"
+DataTable(phytech,True,-1)
+'store every 10 seconds
+DataInterval(0,10,sec,10)
+'store average of 10 battery voltage measurements
+Average(1,batt_V,IEEE4,False)
+'store average of 10 sensor #5 voltage ratio measurements
+Average(1,denRat5,IEEE4,False)
+EndTable
+
+'measurements
+BeginProg
+'measure every 1 second
+Scan(1,sec,0,0)
+'measure battery in volts
+Battery(batt_V)
+'measure SE6 in millivolts (repeat for each sensor)
+VoltSE(denIn_mV,1,mV5000,6,True,0,_60Hz,1,0)
+'measure SE5 in millivolts
+VoltSE(denOut5_mV,1,mV5000,5,True,0,_60Hz,1,0)
+'calculate sensor #5 voltage ratio
+denRat5 = denOut5_mV / denIn_mV
+'run storage instructions
+CallTable phytech
+NextScan
+EndProg

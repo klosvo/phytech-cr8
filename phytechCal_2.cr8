@@ -1,0 +1,85 @@
+'WIRING          = SENSOR -> KHAKI CABLE -> GREY CABLE -> Logger
+'5V input        = green  -> green       -> red        -> 5V and SE6
+'0.5-4.5V output = red    -> white       -> white      -> SE1-5
+'power ground    = yellow -> brown       -> black      -> G
+
+'variable to store battery volts
+Public battV
+'variable to store sensor input millivolts
+Public denInmV
+'variable to store sensor #6 output millivolts
+Public denOutmV6
+'variable to store sensor #7 output millivolts
+Public denOutmV7
+'variable to store sensor #8 output millivolts
+Public denOutmV8
+'variable to store sensor #9 output millivolts
+Public denOutmV9
+'variable to store sensor #10 output millivolts
+Public denOutmV10
+'variable to store sensor #6 voltage ratio
+Public denRat6
+'variable to store sensor #7 voltage ratio
+Public denRat7
+'variable to store sensor #8 voltage ratio
+Public denRat8
+'variable to store sensor #9 voltage ratio
+Public denRat9
+'variable to store sensor #10 voltage ratio
+Public denRat10
+'storage in table named "phytech2"
+DataTable(phytech2,True,-1)
+'store every 5 seconds
+DataInterval(0,5,sec,10)
+'store average of 5 battery voltage measurements
+Average(1,battV,IEEE4,False)
+'store average of 5 sensor #6 voltage ratio measurements
+Average(1,denRat6,IEEE4,False)
+'store average of 5 sensor #7 voltage ratio measurements
+Average(1,denRat7,IEEE4,False)
+'store average of 5 sensor #8 voltage ratio measurements
+Average(1,denRat8,IEEE4,False)
+'store average of 5 sensor #9 voltage ratio measurements
+Average(1,denRat9,IEEE4,False)
+'store average of 5 sensor #10 voltage ratio measurements
+Average(1,denRat10,IEEE4,False)
+EndTable
+
+'measurements
+BeginProg
+'measure every 1 second
+Scan(1,sec,0,0)
+'measure battery in volts
+Battery(battV)
+
+'measure SE6 in millivolts (repeat for each sensor)
+VoltSE(denInmV,1,mV5000,6,True,0,_60Hz,1,0)
+
+'measure SE1 in millivolts
+VoltSE(denOutmV6,1,mV5000,1,True,0,_60Hz,1,0)
+'calculate sensor #6 voltage ratio
+denRat6 = denOutmV6 / denInmV
+
+'measure SE2 in millivolts
+VoltSE(denOutmV7,1,mV5000,2,True,0,_60Hz,1,0)
+'calculate sensor #7 voltage ratio
+denRat7 = denOutmV7 / denInmV'run storage instructions
+
+'measure SE3 in millivolts
+VoltSE(denOutmV8,1,mV5000,3,True,0,_60Hz,1,0)
+'calculate sensor #8 voltage ratio
+denRat8 = denOutmV8 / denInmV'run storage instructions
+
+'measure SE4 in millivolts
+VoltSE(denOutmV9,1,mV5000,4,True,0,_60Hz,1,0)
+'calculate sensor #9 voltage ratio
+denRat9 = denOutmV9 / denInmV'run storage instructions
+
+'measure SE5 in millivolts
+VoltSE(denOutmV10,1,mV5000,5,True,0,_60Hz,1,0)
+'calculate sensor #10 voltage ratio
+denRat10 = denOutmV10 / denInmV'run storage instructions
+
+CallTable phytech2
+NextScan
+EndProg
